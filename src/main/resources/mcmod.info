@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "pourbowy",
+    "name": "Pour Bowy",
+    "description": "Adds a family of decorative soil blocks sharing the classic dirt texture.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["Pour Bowy"],
+    "credits": "Created with ForgeGradle for Minecraft 1.6.4.",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
