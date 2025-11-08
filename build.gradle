@@ -1,43 +1,47 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "https://maven.minecraftforge.net"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
+plugins {
+    id 'java'
 }
 
-apply plugin: 'forge'
-
-version = '1.0.0'
 group = 'com.pourbowy'
-archivesBaseName = 'pourbowy'
+version = '1.0.0'
 
-sourceCompatibility = JavaVersion.VERSION_1_7
-targetCompatibility = JavaVersion.VERSION_1_7
-
-minecraft {
-    version = '1.6.4-9.11.1.1345'
-    runDir = 'run'
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
 }
 
-dependencies {
+tasks.withType(JavaCompile).configureEach {
+    options.release = 8
 }
 
-processResources {
-    inputs.property 'version', project.version
-    inputs.property 'mcversion', project.minecraft.version
+def stubs = sourceSets.create('stubs') {
+    java.srcDir 'src/stubs/java'
+    resources.srcDirs = []
+}
 
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version': project.version, 'mcversion': project.minecraft.version
-    }
+tasks.named('compileJava') {
+    dependsOn(tasks.named(stubs.compileJavaTaskName))
+    classpath += stubs.output
+}
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+tasks.named(stubs.compileJavaTaskName) {
+    options.release = 8
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.jar {
+    archiveBaseName = 'pourbowy'
+}
+
+tasks.processResources {
+    inputs.property('version', project.version)
+    inputs.property('mcversion', '1.6.4')
+
+    filesMatching('mcmod.info') {
+        expand('version': project.version, 'mcversion': '1.6.4')
     }
 }
